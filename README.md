@@ -90,3 +90,51 @@ Start the Django development server to make sure everything works.
 ```bash
 python manage.py runserver
 ```
+
+**Step 6: Setup your database (Optional)**
+
+Django is using SQLite by default, but for this course we will be using PostgreSQL.
+
+Let's assume we all have PostgreSQL installed from the previous course. Now install Psycopg2 by running the command below for any OS - This is the adapter that connects the database to Django.
+```bash
+pip install psycopg2
+```
+Access PostgreSQL shell.
+```bash
+psql -U postgres
+```
+Create new database.
+```SQL
+CREATE DATABASE your_database_name;
+```
+Create a user for the database.
+```SQL
+CREATE USER your_username WITH PASSWORD 'your_password';
+```
+Grant the user access to the database.
+```SQL
+GRANT ALL PRIVILEGES ON DATABASE your_database_name TO your_username;
+```
+Exit PostgreSQL shell.
+```SQL
+\q
+```
+Now, open 'settings.py' file in your project and find the DATABASES settings. Replace the default SQLite settings with the PosgreSQL, so it looks like this.
+```Python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'your_database_name',
+        'USER': 'your_username',
+        'PASSWORD': 'your_password',
+        'HOST': 'localhost',                        # Or the IP address of your PostgreSQL server
+        'PORT': '5432',                             # Default PostgreSQL port
+    }
+}
+```
+Once all the settings are updated, you have to apply migrations to set up your database schema.
+
+Run the following command:
+```bash
+python manage.py migrate
+```
