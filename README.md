@@ -5,136 +5,138 @@ Course of SoftUni - Second part of the module Python DB
 ### 0.1. Setting up a virtual environment and Django project
 <br>
 
-**Step 1: Set up your Python virtual environment**
+- **Step 1: Set up your Python virtual environment**
 
-Make sure you have Python 3.x installed. You can download it from [here](https://www.python.org/)
+    Make sure you have Python 3.x installed. You can download it from [here](https://www.python.org/)
 
-Verify your Python version.
-```bash
-python --version
-```
-Install virtualenv. Virtual environment helps to manage project dependencies.
-```bash
-pip install virtualenv
-```
-<br>
+    Verify your Python version.
+    ```bash
+    python --version
+    ```
+    Install virtualenv. Virtual environment helps to manage project dependencies.
+    ```bash
+    pip install virtualenv
+    ```
+    <br>
 
-**Step 2: Create your project directory**
+- **Step 2: Create your project directory**
 
-Create new directory, where your project will be, then navigate to it.
-```bash
-cd path\to\your\workspace
-mkdir my_django_project
-cd my_django_project
-```
-<br>
+    Create new directory, where your project will be, then navigate to it.
+    ```bash
+    cd path\to\your\workspace
+    mkdir my_django_project
+    cd my_django_project
+    ```
+    <br>
 
-**Step 3: Set up a virtual environment**
+- **Step 3: Set up a virtual environment**
 
-Inside your project directory, create a new virtual environemt that will be used only for this project. Named 'venv' (Optional)
-```bash
-python -m venv venv
-```
-The virtual environment must be activated. Activation can be confirmed, once (venv) appears at the very left in you shell prompt.
-```bash
-venv\Scripts\activate
-```
-You can see the current packages.
-```bash
-pip list
-```
-If you want to install a new package. [More details on packages here](https://packaging.python.org/en/latest/tutorials/installing-packages/)
-```bash
-pip install <package_name>
-```
-If you have to install packages from 'requirements.txt' file.
-```bash
-py -m pip install -r requirements.txt
-```
-Or if you want, you can also export your packages to 'requirements.txt'. (To be used for other projects)
-```bash
-pip freeze > requirements.txt
-```
-<br>
+    Inside your project directory, create a new virtual environemt that will be used only for this project. Named 'venv' (Optional)
+    ```bash
+    python -m venv venv
+    ```
+    The virtual environment must be activated. Activation can be confirmed, once (venv) appears at the very left in you shell prompt.
+    ```bash
+    venv\Scripts\activate
+    ```
+    You can see the current packages.
+    ```bash
+    pip list
+    ```
+    If you want to install a new package. For more details on packages click [here](https://packaging.python.org/en/latest/tutorials/installing-packages/)
+    ```bash
+    pip install <package_name>
+    ```
+    If you have to install packages from 'requirements.txt' file.
+    ```bash
+    py -m pip install -r requirements.txt
+    ```
+    Or if you want, you can also export your packages to 'requirements.txt'. (To be used for other projects)
+    ```bash
+    pip freeze > requirements.txt
+    ```
+    <br>
 
-**Step 4: Install Django**
+- **Step 4: Install Django**
 
-Once the environment is activated, it is time to install Django in it.
-```bash
-pip install django
-```
-Verify Django installation and see its version.
-```bash
-django-admin --version
-```
-<br>
+    Once the environment is activated, it is time to install Django in it.
+    ```bash
+    pip install django
+    ```
+    Verify Django installation and see its version.
+    ```bash
+    django-admin --version
+    ```
+    <br>
 
-**Step 5: Create a new Django project and start it**
+- **Step 5: Create a new Django project and start it**
 
-Create a new Django project.
-```bash
-django-admin startproject my_project
-```
-Verify the project structure. It should look like this.
-```markdown
-my_django_project/
-    manage.py
-    my_project/
-        __init__.py
-        settings.py
-        urls.py
-        asgi.py
-        wsgi.py
-```
-Start the Django development server to make sure everything works.
-```bash
-python manage.py runserver
-```
+    Create a new Django project.
+    ```bash
+    django-admin startproject my_project
+    ```
+    Verify the project structure. It should look like this.
+    ```markdown
+    my_django_project/
+        manage.py
+        my_project/
+            __init__.py
+            settings.py
+            urls.py
+            asgi.py
+            wsgi.py
+    ```
+    Start the Django development server to make sure everything works.
+    ```bash
+    python manage.py runserver
+    ```
+    <br>
 
-**Step 6: Setup your database (Optional)**
+- **Step 6: Setup your database (Optional)**
 
-Django is using SQLite by default, but for this course we will be using PostgreSQL.
-
-Let's assume we all have PostgreSQL installed from the previous course. Now install Psycopg2 by running the command below for any OS - This is the adapter that connects the database to Django.
-```bash
-pip install psycopg2
-```
-Access PostgreSQL shell.
-```bash
-psql -U postgres
-```
-Create new database.
-```SQL
-CREATE DATABASE your_database_name;
-```
-Create a user for the database.
-```SQL
-CREATE USER your_username WITH PASSWORD 'your_password';
-```
-Grant the user access to the database.
-```SQL
-GRANT ALL PRIVILEGES ON DATABASE your_database_name TO your_username;
-```
-Exit PostgreSQL shell.
-```SQL
-\q
-```
-Now, open 'settings.py' file in your project and find the DATABASES settings. Replace the default SQLite settings with the PosgreSQL, so it looks like this.
-```Python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'your_database_name',
-        'USER': 'your_username',
-        'PASSWORD': 'your_password',
-        'HOST': 'localhost',                        # Or the IP address of your PostgreSQL server
-        'PORT': '5432',                             # Default PostgreSQL port
+    Django is using SQLite by default, but for this course we will be using PostgreSQL.
+    
+    Let's assume we all have PostgreSQL installed from the previous course. Now install Psycopg2 by running the command below for any OS - This is the adapter that connects the database to Django.
+    ```bash
+    pip install psycopg2
+    ```
+    Access PostgreSQL shell.
+    ```bash
+    psql -U postgres
+    ```
+    Create new database.
+    ```SQL
+    CREATE DATABASE your_database_name;
+    ```
+    Create a user for the database.
+    ```SQL
+    CREATE USER your_username WITH PASSWORD 'your_password';
+    ```
+    Grant the user access to the database.
+    ```SQL
+    GRANT ALL PRIVILEGES ON DATABASE your_database_name TO your_username;
+    ```
+    Exit PostgreSQL shell.
+    ```SQL
+    \q
+    ```
+    Now, open 'settings.py' file in your project and find the DATABASES settings. Replace the default SQLite settings with the PosgreSQL, so it looks like this.
+    ```Python
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'your_database_name',
+            'USER': 'your_username',
+            'PASSWORD': 'your_password',
+            'HOST': 'localhost',                        # Or the IP address of your PostgreSQL server
+            'PORT': '5432',                             # Default PostgreSQL port
+        }
     }
-}
-```
-Once all the settings are updated, you have to apply migrations to set up your database schema.
-
-Run the following command:
-```bash
-python manage.py migrate
-```
+    ```
+    Once all the settings are updated, you have to apply migrations to set up your database schema.
+    
+    Run the following command:
+    ```bash
+    python manage.py migrate
+    ```
+    <br>
