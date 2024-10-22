@@ -6,9 +6,11 @@ from datetime import date
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
-
 # Import your models here
-from main_app.models import Student
+from main_app.models import (
+    Student,
+    Employee
+)
 
 
 # Run and print your queries
@@ -76,6 +78,32 @@ def truncate_students():
     students.delete()
 
 
+# Employee model examples:
+def get_all_engineers():
+    engineers = Employee.objects.filter(department='Engineering')
+    result = []
+
+    for e in engineers:
+        result.append(f"{e.first_name} "
+                      f"{e.last_name} from "
+                      f"{e.department} working as "
+                      f"{e.position}")
+
+    return '\n'.join(result)
+
+
+def get_all_managers():
+    all_employees = Employee.objects.all()
+    managers = []
+
+    for e in all_employees:
+        position_info = e.position.split()
+        if 'Manager' in position_info:
+            managers.append(f"{e.first_name}, manager of {e.department}")
+
+    return '\n'.join(managers)
+
+
 # Run queries
 
 # add_students()
@@ -90,3 +118,7 @@ def truncate_students():
 # truncate_students()
 # print(Student.objects.all())
 # print(f"Number of students: {Student.objects.count()}")
+
+# print(get_all_engineers())
+
+# print(get_all_managers())
