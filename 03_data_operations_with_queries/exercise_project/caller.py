@@ -11,9 +11,21 @@ from main_app.models import (
     Pet,
     Artifact,
     Location,
+    Car,
+    Task,
 )
 
 
+# Assistance functions:
+def get_discount_percent(year: int) -> int:
+    percent = 0
+    for digit in str(year):
+        percent += int(digit)
+
+    return percent
+
+
+# CRUD functions:
 def create_pet(name: str, species: str) -> str:
     pet = Pet.objects.create(
         name=name,
@@ -81,6 +93,63 @@ def delete_first_location() -> None:
     Location.objects.first().delete()
 
 
+def apply_discount() -> None:
+    cars = Car.objects.all()
+
+    for car in cars:
+        discount_percent = get_discount_percent(car.year)
+        total_discount = discount_percent / 100 * float(car.price)
+        car.price_with_discount = float(car.price) - total_discount
+        car.save()
+
+
+def get_recent_cars() -> QuerySet:
+    return Car.objects.filter(year__gt=2020).values('model', 'price_with_discount')
+
+
+def delete_last_car() -> None:
+    Car.objects.last().delete()
+
+
+def show_unfinished_tasks() -> str:
+    unfinished_tasks = Task.objects.filter(is_finished=False)
+
+    return '\n'.join(str(t) for t in unfinished_tasks)
+
+
+def complete_odd_tasks() -> None:
+    # for task in Task.objects.all():
+    #     if task.id % 2 == 1:
+    #         task.is_finished = True
+    #         task.save()
+
+    # Using 'bulk_update' method:
+    tasks = Task.objects.all()
+
+    for task in tasks:
+        if task.id % 2 == 1:
+            task.is_finished = True
+
+    Task.objects.bulk_update(tasks, ['is_finished'])
+
+
+def encode_and_replace(text: str, task_title: str):
+    # tasks = Task.objects.filter(title=task_title)
+    #
+    # new_description = ''
+    # for symbol in text:
+    #     new_symbol = ord(symbol) - 3
+    #     new_description += chr(new_symbol)
+    #
+    # for task in tasks:
+    #     task.description = new_description
+    #     task.save()
+
+    # Optimized solution:
+    decoded_text = ''.join(chr(ord(symbol) - 3) for symbol in text)
+    Task.objects.filter(title=task_title).update(description=decoded_text)
+
+
 # print(create_pet('Buddy', 'Dog'))
 # print(create_pet('Whiskers', 'Cat'))
 # print(create_pet('Rocky', 'Hamster'))
@@ -108,3 +177,9 @@ def delete_first_location() -> None:
 # print(show_all_locations())
 # print(new_capital())
 # print(get_capitals())
+
+# apply_discount()
+# print(get_recent_cars())
+
+# encode_and_replace("Zdvk#wkh#glvkhv$", "Simple Task")
+# print(Task.objects.get(title='Simple Task').description)
