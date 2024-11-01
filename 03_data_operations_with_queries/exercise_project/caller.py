@@ -1,6 +1,6 @@
 import os
 import django
-from django.db.models import QuerySet
+from django.db.models import QuerySet, F
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
@@ -14,6 +14,7 @@ from main_app.models import (
     Car,
     Task,
     HotelRoom,
+    Character,
 )
 
 
@@ -190,6 +191,67 @@ def delete_last_room() -> None:
         room.delete()
 
 
+def update_characters() -> None:
+    Character.objects.filter(class_name="Mage").update(
+        level=F('level') + 3,
+        intelligence=F('intelligence') - 7,
+    )
+
+    Character.objects.filter(class_name="Warrior").update(
+        hit_points=F('hit_points') / 2,
+        dexterity=F('dexterity') + 4,
+    )
+
+    Character.objects.filter(class_name__in=["Assassin", "Scout"]).update(
+        inventory="The inventory is empty",
+    )
+
+
+def fuse_characters(first_character: Character, second_character: Character) -> None:
+    fusion_name = first_character.name + " " + second_character.name
+    class_name = "Fusion"
+    level = (first_character.level + second_character.level) // 2
+    strength = (first_character.strength + second_character.strength) * 1.2
+    dexterity = (first_character.dexterity + second_character.dexterity) * 1.4
+    intelligence = (first_character.intelligence + second_character.intelligence) * 1.5
+    hit_points = first_character.hit_points + second_character.hit_points
+
+    if first_character.class_name in ["Mage", "Scout"]:
+        inventory = "Bow of the Elven Lords, Amulet of Eternal Wisdom"
+    else:
+        inventory = "Dragon Scale Armor, Excalibur"
+
+    Character.objects.create(
+        name=fusion_name,
+        class_name=class_name,
+        level=level,
+        strength=strength,
+        dexterity=dexterity,
+        intelligence=intelligence,
+        hit_points=hit_points,
+        inventory=inventory
+    )
+
+    first_character.delete()
+    second_character.delete()
+
+
+def grand_dexterity() -> None:
+    Character.objects.update(dexterity=30)
+
+
+def grand_intelligence() -> None:
+    Character.objects.update(intelligence=40)
+
+
+def grand_strength() -> None:
+    Character.objects.update(strength=50)
+
+
+def delete_characters() -> None:
+    Character.objects.filter(inventory="The inventory is empty").delete()
+
+
 # print(create_pet('Buddy', 'Dog'))
 # print(create_pet('Whiskers', 'Cat'))
 # print(create_pet('Rocky', 'Hamster'))
@@ -227,3 +289,34 @@ def delete_last_room() -> None:
 # print(get_deluxe_rooms())
 # reserve_first_room()
 # print(HotelRoom.objects.get(room_number=401).is_reserved)
+
+# character1 = Character.objects.create(
+#     name='Gandalf',
+#     class_name='Mage',
+#     level=10,
+#     strength=15,
+#     dexterity=20,
+#     intelligence=25,
+#     hit_points=100,
+#     inventory='Staff of Magic, Spellbook',
+# )
+
+# character2 = Character.objects.create(
+#     name='Hector',
+#     class_name='Warrior',
+#     level=12,
+#     strength=30,
+#     dexterity=15,
+#     intelligence=10,
+#     hit_points=150,
+#     inventory='Sword of Troy, Shield of Protection',
+# )
+#
+# fuse_characters(character1, character2)
+# fusion = Character.objects.filter(class_name='Fusion').get()
+#
+# print(fusion.name)
+# print(fusion.class_name)
+# print(fusion.level)
+# print(fusion.intelligence)
+# print(fusion.inventory)
