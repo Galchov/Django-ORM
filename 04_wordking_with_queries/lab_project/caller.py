@@ -52,6 +52,24 @@ def filter_authors_by_nationalities(author_nationality: str) -> str:
     return '\n'.join(result)
 
 
+def filter_authors_by_birth_year(start_year: int, end_year: int) -> str:
+    result = []
+    authors = Author.objects.filter(birth_date__year__range=(start_year, end_year)).order_by('-birth_date')
+
+    for a in authors:
+        result.append(f'{a.birth_date}: {a.first_name} {a.last_name}')
+
+    return '\n'.join(result)
+
+
+def change_reviewer_name(current_name: str, new_name: str) -> str:
+    Review.objects.filter(reviewer_name=current_name).update(reviewer_name=new_name)
+
+    result = Review.objects.all()
+
+    return result
+
+
 # print(find_books_by_genre_and_language("Romance", "English"))
 # print(find_books_by_genre_and_language("Poetry", "Spanish"))
 # print(find_books_by_genre_and_language("Mystery", "English"))
@@ -72,3 +90,21 @@ def filter_authors_by_nationalities(author_nationality: str) -> str:
 # print()
 # print("Authors with no nationalities:")
 # print(filter_authors_by_nationalities(None))
+
+# print("Authors born between 1980 and 2000:")
+# print(filter_authors_by_birth_year(1980, 2000))
+# print()
+# print("Authors born between 1950 and 1960:")
+# print(filter_authors_by_birth_year(1950, 1960))
+# print()
+# print("Authors born between 2000 and 2010:")
+# print(filter_authors_by_birth_year(2000, 2010))
+
+# print("Change Alice Johnson to A.J.:")
+# print(change_reviewer_name("Alice Johnson", "A.J."))
+# print()
+# print("Change Bob Wilson to Bobby W.:")
+# print(change_reviewer_name("Bob Wilson", "Bobby W."))
+# print()
+# print("Change A.J. to A. Johnson:")
+# print(change_reviewer_name("A.J.", "A. Johnson"))
