@@ -1,5 +1,28 @@
-# Python-ORM-2024
+# INTRODUCTION
 Course of SoftUni - Second part of the module Python DB
+
+The course covers the basics of mapping between a relational database and an object-oriented model (ORM) with a focus on the Django framework. It begins with an introduction to ORM and its key concepts, before moving on to working with models in Django, including defining models, fields, and methods. The course then delves into advanced topics such as migrations and the Django admin interface, query operations, model relationships, and inheritance. Students will also learn more advanced techniques for working with models and working with ORM queries in Django. The course also covers another popular Python ORM framework, SQLAlchemy, which offers an alternative approach. During the training, exercises will be provided to help them consolidate their knowledge at each step. By the end of this course, participants will have acquired the basic skills to build robust, scalable, and efficient database-driven web applications using Python ORM frameworks.
+
+## Skills you will gain
+
+:heavy_check_mark: Working with a database using an ORM
+
+:heavy_check_mark: Working with models and migrations
+
+:heavy_check_mark: Data retrieval and manipulation
+
+:heavy_check_mark: Using relationships between models
+
+:heavy_check_mark: Model customization and optimization
+
+:heavy_check_mark: More sophisticated techniques when working with ORM queries
+
+
+## Who is this course suitable for?
+
+The course is suitable for everyone who knows the principles of object-oriented programming and knows the basics of relational databases.
+<br/>
+<br/>
 
 ## 0. ORM Introduction / Project Configuration
 ### 0.1. Setting up a virtual environment and Django project
