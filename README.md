@@ -102,8 +102,10 @@ The course is suitable for everyone who knows the principles of object-oriented 
 
     Create a new Django project.
     ```bash
-    django-admin startproject my_project
+    django-admin startproject my_project .
     ```
+    (The dot is for creating the project directly inside the directoty, without an extra folder)
+  
     Verify the project structure. It should look like this.
     ```markdown
     my_django_project/
