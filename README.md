@@ -25,20 +25,20 @@ The course is suitable for everyone who knows the principles of object-oriented 
 <br/>
 
 ## 0. ORM Introduction / Project Configuration
-### 0.1. Setting up a virtual environment and Django project
+### 0.1. Setting up a virtual environment and Django project (For Ubuntu Linux)
 <br>
 
-- **Step 1: Set up your Python virtual environment**
+- **Step 1: Make sure Pyton is installed**
 
-    Make sure you have Python 3.x installed. You can download it from [here](https://www.python.org/)
+    Ubuntu comes with Python installed by default.
 
-    Verify your Python version.
+    Check Python version.
     ```bash
-    python --version
+    python3 --version
     ```
-    Install virtualenv. Virtual environment helps to manage project dependencies.
+    Update the system.
     ```bash
-    pip install virtualenv
+    sudo apt update && sudo apt upgrade -y
     ```
     <br>
 
@@ -56,28 +56,34 @@ The course is suitable for everyone who knows the principles of object-oriented 
 
     Inside your project directory, create a new virtual environemt that will be used only for this project. Named 'venv' (Optional)
     ```bash
-    python -m venv venv
+    python3 -m venv venv
     ```
     The virtual environment must be activated. Activation can be confirmed, once (venv) appears at the very left in you shell prompt.
     ```bash
-    venv\Scripts\activate
+    source venv\bin\activate
     ```
     You can see the current packages.
     ```bash
     pip list
     ```
-    If you want to install a new package. For more details on packages click [here](https://packaging.python.org/en/latest/tutorials/installing-packages/)
+    To install a new package. For more details on packages click [here](https://packaging.python.org/en/latest/tutorials/installing-packages/)
     ```bash
     pip install <package_name>
     ```
-    If you have to install packages from 'requirements.txt' file.
+    To install packages/dependencies from 'requirements.txt' file.
     ```bash
-    py -m pip install -r requirements.txt
+    python3 -m pip install -r requirements.txt
     ```
-    Or if you want, you can also export your packages to 'requirements.txt'. (To be used for other projects)
+    Or simply run.
+    ```bash
+    pip install -r requirements.txt
+    ```
+    To export already installed packages to 'requirements.txt'. (To be used for other projects, for example)
     ```bash
     pip freeze > requirements.txt
     ```
+    (In case 'pip' is not correctly linked to Python 3, use 'pip3' instead. But this is unlikely to happen)
+  
     <br>
 
 - **Step 4: Install Django**
