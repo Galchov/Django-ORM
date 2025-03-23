@@ -46,7 +46,7 @@ The course is suitable for everyone who knows the principles of object-oriented 
 
     Create new directory, where your project will be, then navigate to it.
     ```bash
-    cd path\to\your\workspace
+    cd path/to/your/workspace
     mkdir my_django_project
     cd my_django_project
     ```
@@ -60,7 +60,7 @@ The course is suitable for everyone who knows the principles of object-oriented 
     ```
     The virtual environment must be activated. Activation can be confirmed, once (venv) appears at the very left in you shell prompt.
     ```bash
-    source venv\bin\activate
+    source venv/bin/activate
     ```
     You can see the current packages.
     ```bash
