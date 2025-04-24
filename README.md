@@ -22,6 +22,10 @@ The course covers the basics of mapping between a relational database and an obj
 
 The course is suitable for everyone who knows the principles of object-oriented programming and knows the basics of relational databases.
 <br/>
+
+***Note:*** For each lab/exercise, uploaded will be only the files that have been worked on, mainly **`models.py`** and **`caller.py`**. This is because 
+the purpose of the course is to demonstrate and teach the creating of models and processing the data, and also to avoid populating the repository 
+with identical and unnecessary project directories and files.
 <br/>
 
 ## 0. ORM Introduction / Project Configuration
@@ -171,3 +175,38 @@ The course is suitable for everyone who knows the principles of object-oriented 
     python manage.py migrate
     ```
     <br>
+
+- **Other useful tools**
+
+    **Python Decouple** - Helps you to organize your settings so that you can change parameters without having to redeploy your app.
+  
+    Installation and usage:
+    ```bash
+    pip install python-decouple
+    ```
+    Create **`.env`** file in the project directory (same level as **`manage.py`**), and store the parameters inside.
+    ```Python
+    DB_NAME=your_database_name
+    DB_USER=your_database_username
+    DB_PASSWORD=your_database_password
+    ```
+    Then import *`config`* function from *`decouple`* module and use it as the following example:
+    ```Python
+    from decouple import config
+    ...
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config("DB_NAME"),
+            'USER': config("DB_USER"),
+            'PASSWORD': config("DB_PASSWORD"),
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
+    ```
+    <br/>
+    
+    **Django Debug Toolbar** - The Django Debug Toolbar is a configurable set of panels that display various debug information about
+    the current request/response and when clicked, display more details about the panel’s content.
+    **For more information visit its docs.**
