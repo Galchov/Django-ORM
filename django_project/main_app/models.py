@@ -15,9 +15,11 @@ class Product(models.Model):
     )
     category = models.CharField(
         max_length=100,
+        default="Uncategorized",
     )
     supplier = models.CharField(
         max_length=150,
+        default="Unknown Supplier"
     )
     created_on = models.DateTimeField(
         auto_now_add=True,
@@ -27,4 +29,5 @@ class Product(models.Model):
         auto_now=True,
         editable=False,
     )
+    barcode = models.IntegerField()
     
