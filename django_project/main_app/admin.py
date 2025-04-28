@@ -1,5 +1,5 @@
 from django.contrib import admin
-from main_app.models import EventRegistration, Movie, Student, Supplier, Course
+from main_app.models import EventRegistration, Movie, Student, Supplier, Course, Person
 
 
 @admin.register(EventRegistration)
@@ -73,3 +73,9 @@ class CourseAdmin(admin.ModelAdmin):
             },
         ),
     ]
+
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ["name", "age", "age_group"]
+    

@@ -2,15 +2,18 @@ from django.db import migrations
 
 
 def get_unique_brands(apps, schema_editor):
-    shoe = apps.get_model("main_app", "Shoe")
-    unique_brands = apps.get_model("main_app", "UniqueBrands")
+    ShoeModel = apps.get_model("main_app", "Shoe")
+    UniqueBrands = apps.get_model("main_app", "UniqueBrands")
 
-    db_alias = schema_editor.connection.alias
+    unique_brands = ShoeModel.objects.values_list("brand", flat=True).distinct()
+    unique_brands_to_create = [UniqueBrands(brand=brand_name) for brand_name in unique_brands]
 
-    unique_brands_names = shoe.objects.values_list("brand", flat=True).distinct()
+    UniqueBrands.objects.bult_create(unique_brands_to_create)
 
-    for brand_name  in unique_brands_names:
-        unique_brands.objects.using(db_alias).create(brand_name=brand_name)
+
+def delete_unique_brands_data(apps, schema_editor):
+    UniqueBrands = apps.get_model("main_app", "UniqueBrands")
+    UniqueBrands.objects.all().delete()
 
 
 class Migration(migrations.Migration):
@@ -20,5 +23,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(get_unique_brands)
+        migrations.RunPython(
+            code=get_unique_brands,
+            reverse_code=delete_unique_brands_data,
+        ),
     ]
