@@ -1,33 +1,33 @@
 from django.db import models
 
 
-class Product(models.Model):
-    name = models.CharField(
-        max_length=500,
+class Shoe(models.Model):
+    brand = models.CharField(max_length=25)
+    size = models.PositiveIntegerField()
+
+
+class UniqueBrands(models.Model):
+    brand_name = models.CharField(
+        max_length=25,
+        unique=True,
     )
-    description = models.TextField(
-        null=True, 
-        blank=True,
-    )
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-    )
-    category = models.CharField(
-        max_length=100,
-        default="Uncategorized",
-    )
-    supplier = models.CharField(
-        max_length=150,
-        default="Unknown Supplier"
-    )
-    created_on = models.DateTimeField(
-        auto_now_add=True,
-        editable=False,
-    )
-    last_edited_on = models.DateTimeField(
-        auto_now=True,
-        editable=False,
-    )
-    barcode = models.IntegerField()
+
+
+class EventRegistration(models.Model):
+    event_name = models.CharField(max_length=60)
+    participant_name = models.CharField(max_length=50)
+    registration_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.participant_name} - {self.event_name}"
+
+
+class Movie(models.Model):
+    title = models.CharField(max_length=100)
+    director = models.CharField(max_length=100)
+    release_year = models.PositiveIntegerField()
+    genre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'Movie "{self.title}" by {self.director}'
     
