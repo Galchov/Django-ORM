@@ -1,5 +1,5 @@
 from django.contrib import admin
-from main_app.models import EventRegistration, Movie, Student, Supplier, Course, Person
+from main_app.models import EventRegistration, Movie, Student, Supplier, Course, Person, Order
 
 
 @admin.register(EventRegistration)
@@ -79,3 +79,7 @@ class CourseAdmin(admin.ModelAdmin):
 class PersonAdmin(admin.ModelAdmin):
     list_display = ["name", "age", "age_group"]
     
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ["product_name", "warranty", "order_date", "status", "delivery"]
