@@ -6,10 +6,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 
-from main_app.models import Pet, Artifact, Location
+from main_app.models import Pet, Artifact, Location, Car, Task, HotelRoom
 
 
-# Task 1:
+# ===== Task 1 =====
 def create_pet(name: str, species: str) -> str:
     pet = Pet.objects.create(
         name=name,
@@ -19,7 +19,7 @@ def create_pet(name: str, species: str) -> str:
     return f"{pet.name} is a very cute {pet.species}!"
 
 
-# Task 2:
+# ===== Task 2 =====
 def create_artifact(name: str, origin: str, age: int, description: str, is_magical: bool) -> str:
     artifact = Artifact.objects.create(
         name=name,
@@ -42,7 +42,7 @@ def delete_all_artifacts() -> None:
     Artifact.objects.all().delete()
 
 
-# Task 3:
+# ===== Task 3 =====
 def show_all_locations() -> str:
     all_locations = Location.objects.all().order_by('-id')
     locations_sorted = []
@@ -97,6 +97,150 @@ def delete_first_location() -> None:
 #     return "Locations added successfully."
 
 
+# ===== Task 4 =====
+def apply_discount() -> None:
+    all_cars = Car.objects.all()
+    for car in all_cars:
+        number = car.year
+        discount_percentage = 0
+        while number > 0:
+            discount_percentage += number % 10
+            number //= 10
+        
+        new_price = car.price - (car.price * discount_percentage / 100)
+        car.price_with_discount = new_price
+        car.save()
+
+
+def get_recent_cars() -> list:
+    return Car.objects.filter(year__gt=2020).values('model', 'price_with_discount')
+
+
+def delete_last_car() -> None:
+    Car.objects.last().delete()
+
+
+# def insert_cars() -> None:
+#     Car.objects.create(
+#         model="Mercedes C63 AMG",
+#         year=2019,
+#         color="white",
+#         price=120000.00,
+#     )
+#     Car.objects.create(
+#         model="Audi Q7 S line",
+#         year=2023,
+#         color="black",
+#         price=183900.00,
+#     )
+#     Car.objects.create(
+#         model="Chevrolet Corvette",
+#         year=2021,
+#         color="dark grey",
+#         price=199999.00,
+#     )
+#     return "Car added to the Database."
+
+
+# ===== Task 5 =====
+def show_unfinished_tasks() -> str:
+    unfinished_tasks = Task.objects.filter(is_finished=False)
+    return '\n'.join(f"Task - {t.title} needs to be done until {t.due_date}!" for t in unfinished_tasks)
+
+
+def complete_odd_tasks() -> None:
+    all_tasks = Task.objects.all()
+    for t in all_tasks:
+        if t.pk % 2 == 1:
+            t.is_finished = True
+        t.save()
+
+
+def encode_and_replace(text: str, task_title: str) -> None:
+    all_tasks = Task.objects.all()
+    encoded_text = ""
+    for sym in text:
+        new_symbol = chr(ord(sym) - 3)
+        encoded_text += new_symbol
+    
+    for task in all_tasks:
+        if task.title == task_title:
+            task.description = encoded_text
+        task.save()
+
+
+# def create_task() -> None:
+#     Task.objects.create(
+#         title="Sample Task",
+#         description="This is a sample task description",
+#         due_date="2023-10-31",
+#         is_finished=False,
+#     )
+#     return "Task added successfully."
+
+
+# ===== Task 6 =====
+def get_deluxe_rooms() -> str:
+    deluxe_rooms = HotelRoom.objects.filter(room_type=HotelRoom.RoomTypes.DELUXE)
+    deluxe_rooms_even_id = [room for room in deluxe_rooms if room.pk % 2 == 0]
+
+    return "\n".join(
+        f"Deluxe room with number {r.room_number} costs {r.price_per_night}$ per night!" 
+        for r in deluxe_rooms_even_id
+        )
+
+
+def increase_room_capacity() -> None:
+    rooms = HotelRoom.objects.filter(is_reserved=True).order_by('id')
+    previous_room: HotelRoom = None
+
+    for room in rooms:
+        if previous_room:
+            room.capacity += previous_room.capacity
+        else:
+            room.capacity += room.pk
+
+        previous_room = room
+        room.save()
+
+
+def reserve_first_room() -> None:
+    first_room = HotelRoom.objects.first()
+    first_room.is_reserved = True
+    first_room.save()
+
+
+def delete_last_room() -> None:
+    last_room = HotelRoom.objects.last()
+    if not last_room.is_reserved:
+        last_room.delete()
+
+
+# def insert_rooms() -> None:
+#     HotelRoom.objects.create(
+#         room_number=401,
+#         room_type="Standard",
+#         capacity=2,
+#         amenities="Tv",
+#         price_per_night=100.00,
+#     )
+#     HotelRoom.objects.create(
+#         room_number=501,
+#         room_type="Deluxe",
+#         capacity=3,
+#         amenities="Wi-Fi",
+#         price_per_night=200.00,
+#     )
+#     HotelRoom.objects.create(
+#         room_number=601,
+#         room_type="Deluxe",
+#         capacity=6,
+#         amenities="Jacuzzi",
+#         price_per_night=400.00,
+#     )
+#     return "Rooms created successfully."
+
+
 # Task 1:
 # print(create_pet('Buddy', 'Dog'))
 # print(create_pet('Whiskers', 'Cat'))
@@ -113,3 +257,19 @@ def delete_first_location() -> None:
 # print(show_all_locations())
 # print(new_capital())
 # print(get_capitals())
+
+# Task 4:
+# print(insert_cars())
+# apply_discount()
+# print(get_recent_cars())
+
+# Task 5:
+# print(create_task())
+# encode_and_replace("Zdvk#wkh#glvkhv$", "Sample Task")
+# print(Task.objects.get(title='Sample Task').description)
+
+# Task 6:
+# print(insert_rooms())
+# print(get_deluxe_rooms())
+# reserve_first_room()
+# print(HotelRoom.objects.get(room_number=401).is_reserved)
