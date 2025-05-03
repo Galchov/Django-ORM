@@ -6,7 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 
-from main_app.models import Pet, Artifact, Location, Car, Task, HotelRoom
+from main_app.models import Pet, Artifact, Location, Car, Task, HotelRoom, Character
 
 
 # ===== Task 1 =====
@@ -241,6 +241,45 @@ def delete_last_room() -> None:
 #     return "Rooms created successfully."
 
 
+# ===== Task 7 =====
+def update_characters() -> None:
+    characters = Character.objects.all()
+    for c in characters:
+        if c.class_name == "Mage":
+            c.level += 3
+            c.intelligence -= 7
+        elif c.class_name == "Warrior":
+            c.hit_points /= 2
+            c.dexterity += 4
+        elif c.class_name == "Assasin" or c.class_name == "Scout":
+            c.inventory = "The inventory is empty"
+        c.save()
+
+
+def create_characters() -> None:
+    character1 = Character.objects.create(
+        name='Gandalf',
+        class_name='Mage',
+        level=10,
+        strength=15,
+        dexterity=20,
+        intelligence=25,
+        hit_points=100,
+        inventory='Staff of Magic, Spellbook',
+    )
+    character2 = Character.objects.create(
+        name='Hector',
+        class_name='Warrior',
+        level=12,
+        strength=30,
+        dexterity=15,
+        intelligence=10,
+        hit_points=150,
+        inventory='Sword of Troy, Shield of Protection',
+    )
+    return "Characters added."
+
+
 # Task 1:
 # print(create_pet('Buddy', 'Dog'))
 # print(create_pet('Whiskers', 'Cat'))
@@ -273,3 +312,7 @@ def delete_last_room() -> None:
 # print(get_deluxe_rooms())
 # reserve_first_room()
 # print(HotelRoom.objects.get(room_number=401).is_reserved)
+
+# Task 7:
+# print(create_characters())
+update_characters()
