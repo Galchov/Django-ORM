@@ -7,6 +7,7 @@ django.setup()
 
 
 from main_app.models import Pet, Artifact, Location, Car, Task, HotelRoom, Character
+from django.db.models import F
 
 
 # ===== Task 1 =====
@@ -69,34 +70,6 @@ def delete_first_location() -> None:
     first_location.delete()
 
 
-# def create_locations() -> None:
-#     Location.objects.create(
-#         name="Sofia",
-#         region="Sofia Region",
-#         population=1329000,
-#         description="The capital of Bulgaria and the largest city in the country",
-#         is_capital=False,
-#     )
-
-#     Location.objects.create(
-#         name="Plovdiv",
-#         region="Plovdiv Region",
-#         population=346942,
-#         description="The second-largest city in Bulgaria with a rich historical heritage",
-#         is_capital=False,
-#     )
-
-#     Location.objects.create(
-#         name="Varna",
-#         region="Varna Region",
-#         population=330486,
-#         description="A city known for its sea breeze and beautiful beaches on the Black Sea",
-#         is_capital=False,
-#     )
-
-#     return "Locations added successfully."
-
-
 # ===== Task 4 =====
 def apply_discount() -> None:
     all_cars = Car.objects.all()
@@ -118,28 +91,6 @@ def get_recent_cars() -> list:
 
 def delete_last_car() -> None:
     Car.objects.last().delete()
-
-
-# def insert_cars() -> None:
-#     Car.objects.create(
-#         model="Mercedes C63 AMG",
-#         year=2019,
-#         color="white",
-#         price=120000.00,
-#     )
-#     Car.objects.create(
-#         model="Audi Q7 S line",
-#         year=2023,
-#         color="black",
-#         price=183900.00,
-#     )
-#     Car.objects.create(
-#         model="Chevrolet Corvette",
-#         year=2021,
-#         color="dark grey",
-#         price=199999.00,
-#     )
-#     return "Car added to the Database."
 
 
 # ===== Task 5 =====
@@ -167,16 +118,6 @@ def encode_and_replace(text: str, task_title: str) -> None:
         if task.title == task_title:
             task.description = encoded_text
         task.save()
-
-
-# def create_task() -> None:
-#     Task.objects.create(
-#         title="Sample Task",
-#         description="This is a sample task description",
-#         due_date="2023-10-31",
-#         is_finished=False,
-#     )
-#     return "Task added successfully."
 
 
 # ===== Task 6 =====
@@ -216,6 +157,170 @@ def delete_last_room() -> None:
         last_room.delete()
 
 
+# ===== Task 7 =====
+def update_characters() -> None:
+    # Preferred method:
+    Character.objects.filter(class_name=Character.ClassNameChoices.MAGE).update(
+        level=F('level') + 3,
+        intelligence=F('intelligence') - 7,
+    )
+
+    Character.objects.filter(class_name=Character.ClassNameChoices.WARRIOR).update(
+        hit_points=F('hit_points') / 2,
+        dexterity=F('dexterity') + 4,
+    )
+
+    Character.objects.filter(class_name__in=[Character.ClassNameChoices.ASSASSIN, Character.ClassNameChoices.SCOUT]).update(
+        inventory="The inventory is empty"
+    )
+
+    # Not preferred method:
+    # characters = Character.objects.all()
+    # for c in characters:
+    #     if c.class_name == "Mage":
+    #         c.level += 3
+    #         c.intelligence -= 7
+    #     elif c.class_name == "Warrior":
+    #         c.hit_points /= 2
+    #         c.dexterity += 4
+    #     elif c.class_name in ("Assasin", "Scout"):
+    #         c.inventory = "The inventory is empty"
+    #     c.save()
+
+
+def fuse_characters(first_character: Character, second_character: Character) -> None:
+    new_name = f"{first_character.name} {second_character.name}"
+    new_class_name = Character.ClassNameChoices.FUSION
+    new_level = (first_character.level + second_character.level) // 2
+    new_strength = (first_character.strength + second_character.strength) * 1.2
+    new_dexterity = (first_character.dexterity + second_character.dexterity) * 1.4
+    new_intelligence = (first_character.intelligence + second_character.intelligence) * 1.5
+    new_hit_points = first_character.hit_points + second_character.hit_points
+    new_inventory = None
+
+    if first_character.class_name in [Character.ClassNameChoices.MAGE, Character.ClassNameChoices.SCOUT]:
+        new_inventory = "Bow of the Elven Lords, Amulet of Eternal Wisdom"
+    elif first_character.class_name in (Character.ClassNameChoices.ASSASSIN, Character.ClassNameChoices.WARRIOR):
+        new_inventory = "Dragon Scale Armor, Excalibur"
+
+    mega_character = Character.objects.create(
+        name=new_name,
+        class_name=new_class_name,
+        level=new_level,
+        strength=new_strength,
+        dexterity=new_dexterity,
+        intelligence=new_intelligence,
+        hit_points=new_hit_points,
+        inventory=new_inventory,
+    )
+
+    first_character.delete()
+    second_character.delete()
+
+
+def grant_dexterity() -> None:
+    Character.objects.update(dexterity=30)
+
+
+def grant_intelligence() -> None:
+    Character.objects.update(intelligence=40)
+
+
+def grant_strength() -> None:
+    Character.objects.update(strength=50)
+
+
+def delete_characters() -> None:
+    Character.objects.filter(inventory="The inventory is empty").delete()
+
+
+# ===== Tests =====
+
+# Task 1:
+# print(create_pet('Buddy', 'Dog'))
+# print(create_pet('Whiskers', 'Cat'))
+# print(create_pet('Rocky', 'Hamster'))
+
+# Task 2:
+# print(create_artifact('Ancient Sword', 'Lost Kingdom', 500, 'A legendary sword with a rich history', True))
+# artifact_object = Artifact.objects.get(name='Ancient Sword')
+# rename_artifact(artifact_object, 'Ancient Shield')
+# print(artifact_object.name)
+
+# Task 3:
+# def create_locations() -> None:
+#     Location.objects.create(
+#         name="Sofia",
+#         region="Sofia Region",
+#         population=1329000,
+#         description="The capital of Bulgaria and the largest city in the country",
+#         is_capital=False,
+#     )
+
+#     Location.objects.create(
+#         name="Plovdiv",
+#         region="Plovdiv Region",
+#         population=346942,
+#         description="The second-largest city in Bulgaria with a rich historical heritage",
+#         is_capital=False,
+#     )
+
+#     Location.objects.create(
+#         name="Varna",
+#         region="Varna Region",
+#         population=330486,
+#         description="A city known for its sea breeze and beautiful beaches on the Black Sea",
+#         is_capital=False,
+#     )
+
+#     return "Locations added successfully."
+#
+# print(create_locations())
+# print(show_all_locations())
+# print(new_capital())
+# print(get_capitals())
+
+# Task 4:
+# def insert_cars() -> None:
+#     Car.objects.create(
+#         model="Mercedes C63 AMG",
+#         year=2019,
+#         color="white",
+#         price=120000.00,
+#     )
+#     Car.objects.create(
+#         model="Audi Q7 S line",
+#         year=2023,
+#         color="black",
+#         price=183900.00,
+#     )
+#     Car.objects.create(
+#         model="Chevrolet Corvette",
+#         year=2021,
+#         color="dark grey",
+#         price=199999.00,
+#     )
+#     return "Car added to the Database."
+#
+# print(insert_cars())
+# apply_discount()
+# print(get_recent_cars())
+
+# Task 5:
+# def create_task() -> None:
+#     Task.objects.create(
+#         title="Sample Task",
+#         description="This is a sample task description",
+#         due_date="2023-10-31",
+#         is_finished=False,
+#     )
+#     return "Task added successfully."
+#
+# print(create_task())
+# encode_and_replace("Zdvk#wkh#glvkhv$", "Sample Task")
+# print(Task.objects.get(title='Sample Task').description)
+
+# Task 6:
 # def insert_rooms() -> None:
 #     HotelRoom.objects.create(
 #         room_number=401,
@@ -239,75 +344,7 @@ def delete_last_room() -> None:
 #         price_per_night=400.00,
 #     )
 #     return "Rooms created successfully."
-
-
-# ===== Task 7 =====
-def update_characters() -> None:
-    characters = Character.objects.all()
-    for c in characters:
-        if c.class_name == "Mage":
-            c.level += 3
-            c.intelligence -= 7
-        elif c.class_name == "Warrior":
-            c.hit_points /= 2
-            c.dexterity += 4
-        elif c.class_name == "Assasin" or c.class_name == "Scout":
-            c.inventory = "The inventory is empty"
-        c.save()
-
-
-def create_characters() -> None:
-    character1 = Character.objects.create(
-        name='Gandalf',
-        class_name='Mage',
-        level=10,
-        strength=15,
-        dexterity=20,
-        intelligence=25,
-        hit_points=100,
-        inventory='Staff of Magic, Spellbook',
-    )
-    character2 = Character.objects.create(
-        name='Hector',
-        class_name='Warrior',
-        level=12,
-        strength=30,
-        dexterity=15,
-        intelligence=10,
-        hit_points=150,
-        inventory='Sword of Troy, Shield of Protection',
-    )
-    return "Characters added."
-
-
-# Task 1:
-# print(create_pet('Buddy', 'Dog'))
-# print(create_pet('Whiskers', 'Cat'))
-# print(create_pet('Rocky', 'Hamster'))
-
-# Task 2:
-# print(create_artifact('Ancient Sword', 'Lost Kingdom', 500, 'A legendary sword with a rich history', True))
-# artifact_object = Artifact.objects.get(name='Ancient Sword')
-# rename_artifact(artifact_object, 'Ancient Shield')
-# print(artifact_object.name)
-
-# Task 3:
-# print(create_locations())
-# print(show_all_locations())
-# print(new_capital())
-# print(get_capitals())
-
-# Task 4:
-# print(insert_cars())
-# apply_discount()
-# print(get_recent_cars())
-
-# Task 5:
-# print(create_task())
-# encode_and_replace("Zdvk#wkh#glvkhv$", "Sample Task")
-# print(Task.objects.get(title='Sample Task').description)
-
-# Task 6:
+#
 # print(insert_rooms())
 # print(get_deluxe_rooms())
 # reserve_first_room()
@@ -315,4 +352,34 @@ def create_characters() -> None:
 
 # Task 7:
 # print(create_characters())
-update_characters()
+# update_characters()
+
+# character1 = Character.objects.create(
+#         name='Gandalf',
+#         class_name='Mage',
+#         level=10,
+#         strength=15,
+#         dexterity=20,
+#         intelligence=25,
+#         hit_points=100,
+#         inventory='Staff of Magic, Spellbook',
+#     )
+# character2 = Character.objects.create(
+#     name='Hector',
+#     class_name='Warrior',
+#     level=12,
+#     strength=30,
+#     dexterity=15,
+#     intelligence=10,
+#     hit_points=150,
+#     inventory='Sword of Troy, Shield of Protection',
+# )
+
+# fuse_characters(character1, character2)
+# fusion = Character.objects.filter(class_name='Fusion').get()
+
+# print(fusion.name)
+# print(fusion.class_name)
+# print(fusion.level)
+# print(fusion.intelligence)
+# print(fusion.inventory)

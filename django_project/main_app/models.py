@@ -60,6 +60,7 @@ class Character(models.Model):
         WARRIOR = "Warrior", "Warrior"
         ASSASSIN = "Assassin", "Assassin"
         SCOUT = "Scout", "Scout"
+        FUSION = "Fusion", "Fusion"
 
     name = models.CharField(max_length=100)
     class_name = models.CharField(
