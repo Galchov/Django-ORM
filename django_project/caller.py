@@ -1,56 +1,118 @@
 import os
 import django
+from typing import List
+from django.db.models import F, Q, Case, When, Value, QuerySet
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 
-from django.db.models import QuerySet
-from main_app.models import Author, Book, Review
+from main_app.models import ChessPlayer, Meal, Dungeon, Workout, ArtworkGallery, Laptop
 
 
-def find_books_by_genre_and_language(book_genre: str, book_language: str) -> QuerySet:
-    books = Book.objects.filter(genre=book_genre, language=book_language)
-    return books
+def show_highest_rated_art() -> str:
+    arts = ArtworkGallery.objects.order_by('-rating', 'pk')
+    best_art = arts.first()
+    return f"{best_art.art_name} is the highest-rated art with a {best_art.rating} rating!"
 
 
-def find_authors_nationalities() -> str:
-    # Preferred practice
-    authors = Author.objects.filter(nationality__isnull=False) 
-
-    # Another way with the same result
-    # authors = Author.objects.exclude(nationality=None)
-
-    result = [f"{a.first_name} {a.last_name} is {a.nationality}" for a in authors]
-    return '\n'.join(result)
+def bulk_create_arts(first_art: ArtworkGallery, second_art: ArtworkGallery) -> None:
+    ArtworkGallery.objects.bulk_create([first_art, second_art])
 
 
-def order_books_by_year() -> str:
-    books = Book.objects.order_by('publication_year', 'title')
-    result = [f"{b.publication_year} year: {str(b)}" for b in books]
-    return '\n'.join(result)
+def delete_negative_rated_arts() -> None:
+    negative_rated_arts = ArtworkGallery.objects.filter(rating__lt=0)
+    negative_rated_arts.delete()
 
 
-def delete_review_by_id(review_id: int) -> str:
-    review = Review.objects.get(pk=review_id)
-    review.delete()
-    return f"Review by {review.reviewer_name} was deleted"
+def show_the_most_expensive_laptop() -> str:
+    laptops = Laptop.objects.order_by('-price', '-pk')
+    most_expensive = laptops.first()
+    return f"{most_expensive.brand} is the most expensive laptop available for {most_expensive.price}$!"
 
 
-def filter_authors_by_nationalities(nationality: str) -> str:
-    authors = Author.objects.filter(nationality=nationality).order_by('first_name', 'last_name')
-    result = [f"{str(a)}" if a.biography is None else f"{a.biography}" for a in authors]
-    return '\n'.join(result)
+def bulk_create_laptops(args: List[Laptop]) -> None:
+    Laptop.objects.bulk_create(args)
 
 
-def filter_authors_by_birth_year(first_year: int, second_year: int) -> str:
-    authors = Author.objects.filter(birth_date__year__range=(first_year, second_year)).order_by('-birth_date')
-    result = [f"{a.birth_date}: {str(a)}" for a in authors]
-    return '\n'.join(result)
+def update_to_512_GB_storage() -> None:
+    Laptop.objects.filter(brand__in=["Asus", "Lenovo"]).update(storage=512)
 
 
-def change_reviewer_name(current_name: str, new_name: str) -> QuerySet:
-    Review.objects.filter(reviewer_name=current_name).update(reviewer_name=new_name)
-    result = Review.objects.all()
-    return result
+def update_to_16_memory() -> None:
+    Laptop.objects.filter(brand__in=["Apple", "Dell", "Acer"]).update(memory=16)
+
+
+def update_operation_systems() -> None:
+    Laptop.objects.update(
+        operation_system=Case(
+            When(brand="Asus", then=Value(Laptop.OSTypeChoices.WINDOWS)),
+            When(brand="Apple", then=Value(Laptop.OSTypeChoices.MACOS)),
+            When(brand="Lenovo", then=Value(Laptop.OSTypeChoices.CHROMEOS)),
+            When(brand__in=["Dell", "Acer"], then=Value(Laptop.OSTypeChoices.LINUX))
+        )
+    )
+
+    # Laptop.objects.filter(brand=Laptop.BrandTypeChoices.ASUS).update(operation_system=Laptop.OSTypeChoices.WINDOWS)
+    # Laptop.objects.filter(brand=Laptop.BrandTypeChoices.APPLE).update(operation_system=Laptop.OSTypeChoices.MACOS)
+    # Laptop.objects.filter(brand__in=[Laptop.BrandTypeChoices.DELL, Laptop.BrandTypeChoices.ACER]).update(
+    #     operation_system=Laptop.OSTypeChoices.LINUX
+    # )
+    # Laptop.objects.filter(brand=Laptop.BrandTypeChoices.LENOVO).update(operation_system=Laptop.OSTypeChoices.CHROMEOS)
+
+
+def delete_inexpensive_laptops() -> None:
+    low_cost_laptops = Laptop.objects.filter(price__lt=1200)
+    low_cost_laptops.delete()
+
+
+# ==== Test Code =====
+# artwork1 = ArtworkGallery(artist_name='Vincent van Gogh', art_name='Starry Night', rating=4, price=1200000.0)
+# artwork2 = ArtworkGallery(artist_name='Leonardo da Vinci', art_name='Mona Lisa', rating=5, price=1500000.0)
+
+# Bulk saves the instances
+# bulk_create_arts(artwork1, artwork2)
+# print(show_highest_rated_art())
+# print(ArtworkGallery.objects.all())
+
+# laptop1 = Laptop(
+#     brand='Asus',
+#     processor='Intel Core i5',
+#     memory=8,
+#     storage=256,
+#     operation_system='MacOS',
+#     price=899.99
+# )
+# laptop2 = Laptop(
+#     brand='Apple',
+#     processor='Chrome OS',
+#     memory=16,
+#     storage=256,
+#     operation_system='MacOS',
+#     price=1399.99
+# )
+# laptop3 = Laptop(
+#     brand='Lenovo',
+#     processor='AMD Ryzen 7',
+#     memory=12,
+#     storage=256,
+#     operation_system='Linux',
+#     price=999.99,
+# )
+
+# Create a list of instances
+# laptops_to_create = [laptop1, laptop2, laptop3]
+
+# Use bulk_create to save the instances
+# bulk_create_laptops(laptops_to_create)
+
+# update_to_512_GB_storage()
+# update_operation_systems()
+
+# Retrieve 2 laptops from the database
+# asus_laptop = Laptop.objects.filter(brand__exact='Asus').get()
+# lenovo_laptop = Laptop.objects.filter(brand__exact='Lenovo').get()
+
+# print(asus_laptop.storage)
+# print(lenovo_laptop.operation_system)
