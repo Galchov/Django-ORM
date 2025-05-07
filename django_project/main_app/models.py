@@ -13,10 +13,10 @@ class ChessPlayer(models.Model):
 
 class Meal(models.Model):
     class MealTypeChoices(models.TextChoices):
-        BREAKFAST = "Breakfast", "Breakfast"
-        LUNCH = "Lunch", "Lunch"
-        DINNER = "Dinner", "Dinner" 
-        SNACK = "Snack", "Snack"
+        BREAKFAST = 'Breakfast', 'Breakfast'
+        LUNCH = 'Lunch', 'Lunch'
+        DINNER = 'Dinner', 'Dinner'
+        SNACK = 'Snack', 'Snack'
 
     name = models.CharField(max_length=100)
     meal_type = models.CharField(max_length=10, choices=MealTypeChoices)
@@ -27,13 +27,13 @@ class Meal(models.Model):
 
 
 class Dungeon(models.Model):
-    class DifficultyTypeChoices(models.TextChoices):
-        EASY = "Easy", "Easy"
-        MEDIUM = "Medium", "Medium"
-        HARD = "Hard", "Hard"
+    class DifficultyChoices(models.TextChoices):
+        EASY = 'Easy', 'Easy'
+        MEDIUM = 'Medium', 'Medium'
+        HARD = 'Hard', 'Hard'
 
     name = models.CharField(max_length=100)
-    difficulty = models.CharField(max_length=10, choices=DifficultyTypeChoices)
+    difficulty = models.CharField(max_length=10, choices=DifficultyChoices)
     location = models.CharField(max_length=100)
     boss_name = models.CharField(max_length=100)
     recommended_level = models.PositiveIntegerField()
@@ -43,11 +43,11 @@ class Dungeon(models.Model):
 
 class Workout(models.Model):
     class WorkoutTypeChoices(models.TextChoices):
-        CARDIO = "Cardio", "Cardio"
-        STRENGTH = "Strength", "Strength"
-        YOGA = "Yoga", "Yoga"
-        CROSSFIT = "CrossFit", "CrossFit"
-        CALISTHENICS = "Calisthenics", "Calisthenics"
+        CARDIO = 'Cardio', 'Cardio'
+        STRENGTH = 'Strength', 'Strength'
+        YOGA = 'Yoga', 'Yoga'
+        CROSSFIT = 'CrossFit', 'CrossFit'
+        CALISTHENICS = 'Calisthenics', 'Calisthenics'
 
     name = models.CharField(max_length=200)
     workout_type = models.CharField(max_length=20, choices=WorkoutTypeChoices)
@@ -65,22 +65,22 @@ class ArtworkGallery(models.Model):
 
 
 class Laptop(models.Model):
-    class BrandTypeChoices(models.TextChoices):
-        ASUS = "Asus", "Asus"
-        ACER = "Acer", "Acer"
-        APPLE = "Apple", "Apple"
-        LENOVO = "Lenovo", "Lenovo"
-        DELL = "Dell", "Dell"
+    class BrandChoices(models.TextChoices):
+        ASUS = 'Asus', 'Asus'
+        ACER = 'Acer', 'Acer'
+        APPLE = 'Apple', 'Apple'
+        LENOVO = 'Lenovo', 'Lenovo'
+        DELL = 'Dell', 'Dell'
 
-    class OSTypeChoices(models.TextChoices):
-        WINDOWS = "Windows", "Windows"
-        MACOS = "MacOS", "MacOS"
-        LINUX = "Linux", "Linux"
-        CHROMEOS = "ChromeOS", "ChromeOS"
-    
-    brand = models.CharField(max_length=20, choices=BrandTypeChoices)
+    class OperationSystemChoices(models.TextChoices):
+        WINDOWS = 'Windows', 'Windows'
+        MACOS = 'MacOS', 'MacOS'
+        LINUX = 'Linux', 'Linux'
+        CHROME_OS = 'Chrome OS', 'Chrome OS'
+
+    brand = models.CharField(max_length=20, choices=BrandChoices)
     processor = models.CharField(max_length=100)
-    memory = models.PositiveIntegerField(help_text="Memory in GB")
-    storage = models.PositiveIntegerField(help_text="Storage in GB")
-    operation_system = models.CharField(max_length=100, choices=OSTypeChoices)
+    memory = models.PositiveIntegerField(help_text='Memory in GB')
+    storage = models.PositiveIntegerField(help_text='Storage in GB')
+    operation_system = models.CharField(max_length=20, choices=OperationSystemChoices)
     price = models.DecimalField(max_digits=10, decimal_places=2)
