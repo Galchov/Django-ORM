@@ -1,13 +1,13 @@
 import os
 import django
 from typing import List
-from django.db.models import Case, When, Value
+from django.db.models import Case, When, Value, QuerySet
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
-from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal, Dungeon
+from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal, Dungeon, Workout
 
 
 ##### ArtworkGallery #####
@@ -157,7 +157,9 @@ def delete_lunch_and_snack_meals() -> None:
 ##### Dungeon #####
 
 def show_hard_dungeons() -> str:
-    hard_dungeons = Dungeon.objects.filter(difficulty=Dungeon.DifficultyChoices.HARD)
+    hard_dungeons = Dungeon.objects.filter(
+        difficulty=Dungeon.DifficultyChoices.HARD
+    ).order_by('-location')
     return '\n'.join(f"{d.name} is guarded by {d.boss_name} who has {d.boss_health} health points!"
                       for d in hard_dungeons)
 
@@ -208,3 +210,53 @@ def set_new_locations() -> None:
             When(recommended_level=75, then=Value('Shadowed Abyss')),
         )
     )
+
+
+##### Workout #####
+
+def show_workouts() -> str:
+    workouts = Workout.objects.filter(workout_type__in=[
+        Workout.WorkoutTypeChoices.CALISTHENICS,
+        Workout.WorkoutTypeChoices.CROSSFIT,
+    ]).order_by('pk')
+    return '\n'.join(f"{w.name} from {w.workout_type} type has {w.difficulty} difficulty!"
+                     for w in workouts)
+
+
+def get_high_difficulty_cardio_workouts() -> QuerySet:
+    workouts = Workout.objects.filter(
+        workout_type=Workout.WorkoutTypeChoices.CARDIO,
+        difficulty='High',
+    ).order_by('instructor')
+    return workouts
+
+
+def set_new_instructors() -> None:
+    Workout.objects.update(
+        instructor=Case(
+            When(workout_type=Workout.WorkoutTypeChoices.CARDIO, then=Value('John Smith')),
+            When(workout_type=Workout.WorkoutTypeChoices.STRENGTH, then=Value('Michael Williams')),
+            When(workout_type=Workout.WorkoutTypeChoices.YOGA, then=Value('Emily Johnson')),
+            When(workout_type=Workout.WorkoutTypeChoices.CROSSFIT, then=Value('Sarah Davis')),
+            When(workout_type=Workout.WorkoutTypeChoices.CALISTHENICS, then=Value('Chris Heria')),
+        )
+    )
+
+
+def set_new_duration_times() -> None:
+    Workout.objects.update(
+        duration=Case(
+            When(instructor='John Smith', then=Value('15 minutes')),
+            When(instructor='Sarah Davis', then=Value('30 minutes')),
+            When(instructor='Chris Heria', then=Value('45 minutes')),
+            When(instructor='Michael Williams', then=Value('1 hour')),
+            When(instructor='Emily Johnson', then=Value('1 hour and 30 minutes')),
+        )
+    )
+
+
+def delete_workouts() -> None:
+    Workout.objects.exclude(workout_type__in=[
+        Workout.WorkoutTypeChoices.STRENGTH,
+        Workout.WorkoutTypeChoices.CALISTHENICS,
+    ]).delete()
