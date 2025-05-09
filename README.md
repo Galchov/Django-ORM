@@ -210,3 +210,8 @@ with identical and unnecessary project directories and files.
     **Django Debug Toolbar** - The Django Debug Toolbar is a configurable set of panels that display various debug information about
     the current request/response and when clicked, display more details about the panel’s content.
     **For more information visit its docs.**
+
+    **Create a zip file for SoftUni Judge**
+    ```bash
+    zip -r zip_file_name.zip file_1 file_2 folder_1 folder_2
+    ```
