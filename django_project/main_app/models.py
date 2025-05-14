@@ -19,6 +19,9 @@ class Subject(models.Model):
         blank=True,
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Student(models.Model):
     student_id = models.CharField(
@@ -29,4 +32,18 @@ class Student(models.Model):
     last_name = models.CharField(max_length=100)
     birth_date = models.DateField()
     email = models.EmailField(unique=True)
-    subjects = models.ManyToManyField(to='Subject')
+    subjects = models.ManyToManyField(to='Subject', through='StudentEnrollment')
+
+
+class StudentEnrollment(models.Model):
+    class StudentGrdaesChoices(models.TextChoices):
+        A = 'A', 'A'
+        B = 'B', 'B'
+        C = 'C', 'C'
+        D = 'D', 'D'
+        F = 'F', 'F'
+
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    enrollment_date = models.DateField(auto_now_add=True)
+    grade = models.CharField(max_length=1, choices=StudentGrdaesChoices)
