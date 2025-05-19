@@ -10,6 +10,8 @@ from django.db.models import QuerySet
 from main_app.models import Author, Book, Song, Artist, Product, Review
 
 
+# Exercise 1: Library
+
 def show_all_authors_with_their_books() -> str:
     authors = Author.objects.all().order_by('pk')
     authors_with_books = []
@@ -30,6 +32,8 @@ def delete_all_authors_without_books() -> None:
     Author.objects.filter(books__isnull=True).delete()
 
 
+# Exercise 2: Music App
+
 def add_song_to_artist(artist_name: str, song_title: str) -> None:
     artist = Artist.objects.get(name=artist_name)
     song = Song.objects.get(title=song_title)
@@ -47,6 +51,8 @@ def remove_song_from_artist(artist_name: str, song_title: str) -> None:
     song = Song.objects.get(title=song_title)
     artist.songs.remove(song)
 
+
+# Exercise 3: Shop
 
 def calculate_average_rating_for_product_by_name(product_name: str) -> float:
     product = Product.objects.get(name=product_name)
@@ -72,4 +78,11 @@ def get_reviews_with_high_ratings(threshold: int) -> QuerySet:
     
     return high_ratings_reviews
 
-# TODO: Continue with the Shop functions
+
+def get_products_with_no_reviews() -> QuerySet:
+    products_with_no_reviews = Product.objects.filter(reviews__isnull=True).order_by('-name')
+    return products_with_no_reviews
+
+
+def delete_products_without_reviews() -> None:
+    Product.objects.filter(reviews__isnull=True).order_by('-name').delete()
