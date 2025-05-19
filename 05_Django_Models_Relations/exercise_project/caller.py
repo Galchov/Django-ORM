@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 import os
 import django
 
@@ -7,7 +8,7 @@ django.setup()
 
 
 from django.db.models import QuerySet
-from main_app.models import Author, Book, Song, Artist, Product, Review
+from main_app.models import Author, Book, Song, Artist, Product, Review, Driver, DrivingLicense, Owner, Car, Registration
 
 
 # Exercise 1: Library
@@ -40,7 +41,7 @@ def add_song_to_artist(artist_name: str, song_title: str) -> None:
     artist.songs.add(song)
 
 
-def get_songs_by_artist(artist_name: str) -> QuerySet:
+def get_songs_by_artist(artist_name: str) -> QuerySet[Song]:
     artist = Artist.objects.get(name=artist_name)
     songs = artist.songs.all().order_by('-pk')
     return songs
@@ -69,8 +70,10 @@ def calculate_average_rating_for_product_by_name(product_name: str) -> float:
     # Pythonic:
     average_rating = sum(r.rating for r in product_reviews) / len(product_reviews)
 
+    return average_rating
 
-def get_reviews_with_high_ratings(threshold: int) -> QuerySet:
+
+def get_reviews_with_high_ratings(threshold: int) -> QuerySet[Review]:
     # Basic:
     # products = Product.objects.all()
     # high_ratings_reviews = []
@@ -93,3 +96,31 @@ def get_products_with_no_reviews() -> QuerySet:
 
 def delete_products_without_reviews() -> None:
     Product.objects.filter(reviews__isnull=True).delete()
+
+
+# Exercise 4: License
+
+def calculate_licenses_expiration_dates() -> str:
+    licenses = DrivingLicense.objects.all().order_by('-license_number')
+    return '\n'.join(str(l) for l in licenses)
+
+
+def get_drivers_with_expired_licenses(due_date: date) -> QuerySet[Driver]:
+    latest_issue_date = due_date - timedelta(days=365)
+    return Driver.objects.filter(license__issue_date__lt=latest_issue_date)
+
+
+# Exercise 5: Car Registration
+
+def register_car_by_owner(owner: Owner) -> str:
+    unapplied_registration = Registration.objects.filter(car__isnull=True).first()
+    unregistered_car = Car.objects.filter(registration__isnull=True).first()
+    
+    unregistered_car.registration = unapplied_registration
+    unregistered_car.owner = owner
+    unregistered_car.save()
+
+    unapplied_registration.registration_date = date.today()
+    unapplied_registration.save()
+
+    return f"Successfully registered {unregistered_car.model} to {str(owner)} with registration number {unapplied_registration.registration_number}."
