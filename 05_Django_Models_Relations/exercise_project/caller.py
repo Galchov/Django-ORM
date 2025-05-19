@@ -58,31 +58,38 @@ def calculate_average_rating_for_product_by_name(product_name: str) -> float:
     product = Product.objects.get(name=product_name)
     product_reviews = product.reviews.all()
 
-    total_rating = 0
-    for review in product_reviews:
-        review_rating = review.rating
-        total_rating += review_rating
+    # Basic:
+    # total_rating = 0
+    # for review in product_reviews:
+    #     review_rating = review.rating
+    #     total_rating += review_rating
 
-    return total_rating / product_reviews.count()
+    # return total_rating / product_reviews.count()
+
+    # Pythonic:
+    average_rating = sum(r.rating for r in product_reviews) / len(product_reviews)
 
 
 def get_reviews_with_high_ratings(threshold: int) -> QuerySet:
-    products = Product.objects.all()
-    high_ratings_reviews = []
+    # Basic:
+    # products = Product.objects.all()
+    # high_ratings_reviews = []
 
-    for product in products:
-        reviews = product.reviews.all()
-        for review in reviews:
-            if review.rating >= threshold:
-                high_ratings_reviews.append(review)
+    # for product in products:
+    #     reviews = product.reviews.all()
+    #     for review in reviews:
+    #         if review.rating >= threshold:
+    #             high_ratings_reviews.append(review)
+
+    # Pythonic:
+    high_ratings_reviews = Review.objects.filter(rating__gte=threshold)
     
     return high_ratings_reviews
 
 
 def get_products_with_no_reviews() -> QuerySet:
-    products_with_no_reviews = Product.objects.filter(reviews__isnull=True).order_by('-name')
-    return products_with_no_reviews
+    return Product.objects.filter(reviews__isnull=True).order_by('-name')
 
 
 def delete_products_without_reviews() -> None:
-    Product.objects.filter(reviews__isnull=True).order_by('-name').delete()
+    Product.objects.filter(reviews__isnull=True).delete()
