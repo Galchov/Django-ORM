@@ -20,12 +20,7 @@ The course covers the basics of mapping between a relational database and an obj
 
 ## Who is this course suitable for?
 
-The course is suitable for everyone who knows the principles of object-oriented programming and knows the basics of relational databases.
-<br/>
-
-***Note:*** For each lab/exercise, uploaded will be only the files that have been worked on, mainly **`models.py`** and **`caller.py`**. This is because 
-the purpose of the course is to demonstrate and teach the creating of models and processing the data, and also to avoid populating the repository 
-with identical and unnecessary project directories and files.
+The course is suitable for everyone who knows the principles of Object-Oriented Programming and the Fundamentals of Relational Databases.
 <br/>
 
 ## 0. ORM Introduction / Project Configuration
