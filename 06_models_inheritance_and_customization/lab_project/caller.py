@@ -6,10 +6,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 
-from main_app.models import Animal, Mammal, Bird, Reptile, ZooKeeper, Veterinarian
+from main_app.models import Animal, Mammal, Bird, Reptile, ZooKeeper, Veterinarian, ZooDisplayAnimal
 
 
-# Exercise 1:
+##### Exercise 1 #####
 
 # Animal.objects.create(name="Nemo", species="Clownfish", birth_date="2019-04-10", sound="Bubbles")
 # Mammal.objects.create(name="Fluffy", species="Orangutan", birth_date="2018-02-10", sound="Chomps", fur_color="Reddish-brown")
@@ -20,7 +20,8 @@ from main_app.models import Animal, Mammal, Bird, Reptile, ZooKeeper, Veterinari
 # for a in animals:
 #     print(f"{a.name}: {a.species}.")
 
-# Exercise 2:
+
+##### Exercise 2 #####
 
 # zookeeper = ZooKeeper.objects.create(first_name="Peter", last_name="Johnson", phone_number="0899524265", specialty="Mammals")
 # mammal = Mammal.objects.get(name="Fluffy")
@@ -32,3 +33,13 @@ from main_app.models import Animal, Mammal, Bird, Reptile, ZooKeeper, Veterinari
 
 # veterinarian_from_db = Veterinarian.objects.first()
 # print(f"{veterinarian_from_db.first_name} {veterinarian_from_db.last_name} is a Veterinarian.")
+
+
+##### Exercise 3 #####
+
+# is_proxy = ZooDisplayAnimal._meta.proxy
+
+# if is_proxy:
+#     print("ZooDisplayAnimal is a proxy model.")
+# else:
+#     print("ZooDisplayAnimal is not a proxy model.")
