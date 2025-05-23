@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 # Multi-Table Inheritance
@@ -45,6 +46,13 @@ class ZooKeeper(Employee):
         choices=SpecialtyChoices,
     )
     managed_animals = models.ManyToManyField(Animal)
+
+    def clean(self):
+        super().clean()
+
+        choices = [choice[0] for choice in self.SpecialtyChoices.choices]
+        if self.specialty not in choices:
+            raise ValidationError("Specialty must be a valid choice.")
 
 
 class Veterinarian(Employee):
