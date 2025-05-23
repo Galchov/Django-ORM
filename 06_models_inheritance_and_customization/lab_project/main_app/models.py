@@ -32,6 +32,22 @@ class Reptile(Animal):
 
 # Abstract Base Classes
 
+# Custom Field Implementation
+class BooleanChoiceField(models.BooleanField):
+    def __init__(self, *args, **kwargs):
+        # Define the choices
+        choices = (
+            (True, 'Available'),
+            (False, 'Not Available'),
+        )
+
+        # Set choices and default if not already specified
+        kwargs.setdefault('choices', choices)
+        kwargs.setdefault('default', True)
+
+        super().__init__(*args, **kwargs)
+
+
 class Employee(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -64,6 +80,7 @@ class ZooKeeper(Employee):
 
 class Veterinarian(Employee):
     license_number = models.CharField(max_length=10)
+    availability = BooleanChoiceField()
 
 
 # Proxy Models
