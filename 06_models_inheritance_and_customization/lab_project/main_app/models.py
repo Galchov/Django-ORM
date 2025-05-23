@@ -62,5 +62,16 @@ class Veterinarian(Employee):
 # Proxy Models
 
 class ZooDisplayAnimal(Animal):
+    ENDANGERED = ["Cross River Gorilla", "Orangutan", "Green Turtle"]
+
     class Meta:
         proxy = True
+
+    def display_info(self):
+        return f"Meet {self.name}! Species: {self.species}, born {self.birth_date}. It makes a noise like '{self.sound}'."
+
+    def is_endangered(self):
+        danger = self.species in self.ENDANGERED
+        return f"{self.species} is at risk!" if danger else f"{self.species} is not at risk."
+
+    
