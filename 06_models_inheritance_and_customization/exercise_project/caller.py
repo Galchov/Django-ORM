@@ -6,7 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 
-from main_app.models import Mage, Necromancer, UserProfile, Message, Student, CreditCard
+from main_app.models import Mage, Necromancer, UserProfile, Message, Student, CreditCard, Hotel, Room
 
 
 ##### Exercise 1 #####
@@ -86,6 +86,8 @@ from main_app.models import Mage, Necromancer, UserProfile, Message, Student, Cr
 #     print(error)
 
 
+##### Exercise 4 #####
+
 # Create CreditCard instances with card owner names and card numbers
 # credit_card1 = CreditCard(card_owner="Krasimir", card_number="1234567890123450")
 # credit_card2 = CreditCard(card_owner="Pesho", card_number="9876543210987654")
@@ -102,3 +104,6 @@ from main_app.models import Mage, Necromancer, UserProfile, Message, Student, Cr
 # for credit_card in credit_cards:
 #     print(f"Card Owner: {credit_card.card_owner}")
 #     print(f"Card Number: {credit_card.card_number}")
+
+
+##### Exercise 5 #####

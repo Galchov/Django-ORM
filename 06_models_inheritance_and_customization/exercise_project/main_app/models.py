@@ -181,3 +181,42 @@ class MaskedCreditCardField(models.CharField):
 class CreditCard(models.Model):
     card_owner = models.CharField(max_length=100)
     card_number = MaskedCreditCardField(max_length=20)
+
+
+
+# ===== Hotel Reservation System =====
+
+class Hotel(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class Room(models.Model):
+    hotel = models.ForeignKey(
+        to=Hotel,
+        related_name='rooms',
+        on_delete=models.CASCADE,
+    )
+    number = models.CharField(
+        max_length=100,
+        unique=True,
+    )
+    capacity = models.PositiveIntegerField()
+    total_guests = models.PositiveIntegerField()
+    price_per_night = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
+    def clean(self) -> None:
+        if self.total_guests > self.capacity:
+            raise ValidationError("Total guests are more than the capacity of the room")
+        
+    def save(self, *args, **kwargs) -> str:
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+        return f"Room {self.number} created successfully"
