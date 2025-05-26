@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator, MinValueValidator, MaxValueValidator
+from main_app.validators import validate_menu_categories
 
 
 class Restaurant(models.Model):
@@ -29,4 +30,13 @@ class Restaurant(models.Model):
             MaxValueValidator(5.00, message="Rating cannot exceed 5.00."),
         ]
     )
-    
+
+
+class Menu(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(validators=[validate_menu_categories])
+    restaurant = models.ForeignKey(
+        to=Restaurant,
+        on_delete=models.CASCADE,
+        related_name='menus',
+    )
