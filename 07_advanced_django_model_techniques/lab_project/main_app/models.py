@@ -50,7 +50,6 @@ class RestaurantReview(models.Model):
     restaurant = models.ForeignKey(
         to=Restaurant,
         on_delete=models.CASCADE,
-        related_name='reviews',
     )
     review_content = models.TextField()
     rating = models.PositiveIntegerField(
@@ -60,6 +59,7 @@ class RestaurantReview(models.Model):
     )
 
     class Meta:
+        abstract = True
         ordering = ['-rating']
         verbose_name = "Restaurant Review"
         verbose_name_plural = "Restaurant Reviews"
@@ -67,3 +67,15 @@ class RestaurantReview(models.Model):
 
     def __str__(self):
         return f"Reviewer: {self.reviewer_name}, Rating: {self.rating}, Restaurant: {self.restaurant}"
+    
+
+class RegularRestaurantReview(RestaurantReview):
+    pass
+
+
+class FoodCriticRestaurantReview(RestaurantReview):
+    food_critic_cuisine_area = models.CharField(max_length=100)
+
+    class Meta(RestaurantReview.Meta):
+        verbose_name = "Food Critic Review"
+        verbose_name_plural = "Food Critic Reviews"

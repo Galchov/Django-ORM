@@ -7,7 +7,7 @@ django.setup()
 
 
 from django.core.exceptions import ValidationError
-from main_app.models import Restaurant, Menu, RestaurantReview
+from main_app.models import Restaurant, Menu, RegularRestaurantReview, FoodCriticRestaurantReview
 
 
 ##### Test Exercise 1 #####
@@ -91,3 +91,26 @@ from main_app.models import Restaurant, Menu, RestaurantReview
 # print("All Restaurant Reviews:")
 # for review in RestaurantReview.objects.all():
 #     print(f"Reviewer: {review.reviewer_name}, Rating: {review.rating}, Restaurant: {review.restaurant.name}")
+
+
+##### Test Exercise 4 #####
+
+# restaurant1 = Restaurant.objects.create(name="Restaurant A", location="123 Main St.", description="A cozy restaurant", rating=4.88)
+# RegularRestaurantReview.objects.create(reviewer_name="Bob", restaurant=restaurant1, review_content="Good experience overall.", rating=4)
+# RegularRestaurantReview.objects.create(reviewer_name="Aleks", restaurant=restaurant1, review_content="Great food and service!", rating=5)
+
+# duplicate_review = RegularRestaurantReview(reviewer_name="Aleks", restaurant=restaurant1, review_content="Another great meal!", rating=5)
+
+# try:
+#     duplicate_review.full_clean()
+#     duplicate_review.save()
+# except ValidationError as e:
+#     print(f"Validation Error: {e}")
+
+# print("Regular Restaurant Review:")
+# print(f"Model Name: {RegularRestaurantReview._meta.verbose_name}")
+# print(f"Model Plural Name: {RegularRestaurantReview._meta.verbose_name_plural}")
+
+# print("Food Critic Restaurant Review:")
+# print(f"Model Name: {FoodCriticRestaurantReview._meta.verbose_name}")
+# print(f"Model Plural Name: {FoodCriticRestaurantReview._meta.verbose_name_plural}")
