@@ -31,6 +31,9 @@ class Restaurant(models.Model):
         ]
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Menu(models.Model):
     name = models.CharField(max_length=100)
@@ -40,3 +43,27 @@ class Menu(models.Model):
         on_delete=models.CASCADE,
         related_name='menus',
     )
+
+
+class RestaurantReview(models.Model):
+    reviewer_name = models.CharField(max_length=100)
+    restaurant = models.ForeignKey(
+        to=Restaurant,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+    )
+    review_content = models.TextField()
+    rating = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(5, message=None),
+        ],
+    )
+
+    class Meta:
+        ordering = ['-rating']
+        verbose_name = "Restaurant Review"
+        verbose_name_plural = "Restaurant Reviews"
+        unique_together = ['reviewer_name', 'restaurant']
+
+    def __str__(self):
+        return f"Reviewer: {self.reviewer_name}, Rating: {self.rating}, Restaurant: {self.restaurant}"
