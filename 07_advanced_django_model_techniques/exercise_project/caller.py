@@ -7,7 +7,7 @@ django.setup()
 
 
 from django.core.exceptions import ValidationError
-from main_app.models import Customer
+from main_app.models import Book, Customer
 
 
 ##### Test Exercise 1 #####
@@ -26,3 +26,23 @@ from main_app.models import Customer
 
 # except ValidationError as e:
 #     print('\n'.join(e.messages))
+
+
+##### Test Exercise 2 #####
+
+# book = Book(
+#     title="Short Title",
+#     description="A book with a short title.",
+#     genre="Fiction",
+#     author="A",
+#     isbn="1234"
+# )
+
+# try:
+#     book.full_clean()
+#     book.save()
+
+# except ValidationError as e:
+#     print("Validation Error for Book:")
+#     for field, errors in e.message_dict.items():
+#         print(f"{field}: {', '.join(errors)}")
