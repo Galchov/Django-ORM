@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.core.validators import MinValueValidator, MinLengthValidator
 from main_app.custom_validators import NameValidator, PhoneNumberValidator
@@ -78,3 +79,35 @@ class Music(BaseMedia):
     class Meta(BaseMedia.Meta):
         verbose_name = "Model Music"
         verbose_name_plural = "Models of type - Music"
+
+
+class Product(models.Model):
+    TAX_PERCENT: Decimal = Decimal('0.08')
+    SHIPPING_MULTIPLIER: Decimal = Decimal('2.00')
+
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def calculate_tax(self) -> Decimal:
+        return self.price * self.TAX_PERCENT
+    
+    def calculate_shipping_cost(self, weight: Decimal) -> Decimal:
+        return weight * self.SHIPPING_MULTIPLIER
+    
+    def format_product_name(self) -> str:
+        return f"Product: {self.name}"
+
+
+class DiscountedProduct(Product):
+    TAX_PERCENT: Decimal = Decimal('0.05')
+    SHIPPING_MULTIPLIER: Decimal = Decimal('1.50')
+    PRICE_INCREASE_PERCENT: Decimal = Decimal('0.20')
+
+    class Meta:
+        proxy = True
+
+    def calculate_price_without_discount(self) -> float:
+        return self.price + (self.price * self.PRICE_INCREASE_PERCENT)
+    
+    def format_product_name(self):
+        return f"Discounted Product: {self.name}"
