@@ -8,7 +8,7 @@ django.setup()
 
 
 from django.core.exceptions import ValidationError
-from main_app.models import Book, Customer, Product, DiscountedProduct
+from main_app.models import Book, Customer, Product, DiscountedProduct, SpiderHero, FlashHero
 
 
 ##### Test Exercise 1 #####
@@ -83,3 +83,28 @@ from main_app.models import Book, Customer, Product, DiscountedProduct
 # # Format and print the product name (DiscountedProduct)
 # formatted_name = discounted_product.format_product_name()
 # print(f"Formatted Product Name: {formatted_name}")
+
+
+##### Test Exercise 4 #####
+
+# # Create instance of SpiderHero
+# spiderman = SpiderHero(name="Spider-Man", hero_title="Spider Hero", energy=100)
+
+# # Create instance of FlashHero
+# flash = FlashHero(name="The Flash", hero_title="Flash Hero", energy=70)
+# # Save the instances to the database
+# spiderman.save()
+# flash.save()
+
+# # Run the special abilities
+# print(spiderman.swing_from_buildings())
+# print(flash.run_at_super_speed())
+# print(spiderman.swing_from_buildings())
+
+# # Recharge the energy of Spider-Man and The Flash using the mixin method
+# spiderman.recharge_energy(195)
+# flash.recharge_energy(40)
+
+# # Now you can check the updated energy levels
+# print(f"{spiderman.name} - Energy: {spiderman.energy}")
+# print(f"{flash.name} - Energy: {flash.energy}")

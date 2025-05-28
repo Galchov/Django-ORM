@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.db import models
 from django.core.validators import MinValueValidator, MinLengthValidator
 from main_app.custom_validators import NameValidator, PhoneNumberValidator
+from main_app.mixins import RechargeEnergyMixin
 
 
 class Customer(models.Model):
@@ -111,3 +112,69 @@ class DiscountedProduct(Product):
     
     def format_product_name(self):
         return f"Discounted Product: {self.name}"
+
+
+class Hero(models.Model, RechargeEnergyMixin):
+    ENERGY_CONSUMPTION: int = 0
+    MIN_ENERGY: int = 1
+
+    name = models.CharField(max_length=100)
+    hero_title = models.CharField(max_length=100)
+    energy = models.PositiveIntegerField()
+
+    @property
+    def required_energy_message(self) -> str:
+        return ""
+    
+    @property
+    def success_message(self) -> str:
+        return ""
+
+    def use_ability(self):
+        if self.energy < self.ENERGY_CONSUMPTION:
+            return self.required_energy_message
+        
+        if self.energy - self.ENERGY_CONSUMPTION > 0:
+            self.energy -= self.ENERGY_CONSUMPTION
+        else:
+            self.energy = self.MIN_ENERGY
+
+        self.save()
+
+        return self.success_message
+        
+
+class SpiderHero(Hero):
+    ENERGY_CONSUMPTION: int = 80
+
+    class Meta:
+        proxy = True
+    
+    @property
+    def required_energy_message(self) -> str:
+        return f"{self.name} as Spider Hero is out of web shooter fluid"
+
+    @property
+    def success_message(self) -> str:
+        return f"{self.name} as Spider Hero swings from buildings using web shooters"
+    
+    def swing_from_buildings(self) -> str:
+        return self.use_ability()
+
+
+class FlashHero(Hero):
+    ENERGY_CONSUMPTION: int = 65
+
+    class Meta:
+        proxy = True
+    
+    @property
+    def required_energy_message(self) -> str:
+        return f"{self.name} as Flash Hero needs to recharge the speed force"
+
+    @property
+    def success_message(self) -> str:
+        return f"{self.name} as Flash Hero runs at lightning speed, saving the day"
+    
+    def run_at_super_speed(self) -> str:
+        return self.use_ability()
