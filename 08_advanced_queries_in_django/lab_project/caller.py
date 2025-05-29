@@ -72,6 +72,20 @@ def product_quantity_ordered():
     return '\n'.join(result)
 
 
+def ordered_products_per_customer():
+    prefetched_orders = Order.objects.prefetch_related('orderproduct_set__product__category').order_by('pk')
+
+    result = []
+    for order in prefetched_orders:
+        order_info = f"Order ID: {order.pk}, Customer: {order.customer.username}"
+        result.append(order_info)
+        for order_product in order.orderproduct_set.all():
+            product_info = f"- Product: {order_product.product.name}, Category: {order_product.product.category.name}"
+            result.append(product_info)
+    
+    return '\n'.join(result)
+
+
 # Run and print your queries
 # print(add_records_to_database())
 
@@ -86,7 +100,10 @@ def product_quantity_ordered():
 # print('All Available Food Products:')
 # print(Product.objects.available_products_in_category("Food"))
 
-
 ##### Test Exercise 2 #####
 
 # print(product_quantity_ordered())
+
+##### Test Exercise 3 #####
+
+# print(ordered_products_per_customer())
