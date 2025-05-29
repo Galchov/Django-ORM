@@ -5,7 +5,8 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
-# Import your models
+
+from django.db.models import Sum
 from main_app.models import Product, Category, Customer, Order, OrderProduct
 
 
@@ -58,9 +59,21 @@ def add_records_to_database():
     return "All data entered!"
 
 
+def product_quantity_ordered():
+    total_products_ordered = (Product.objects
+                              .annotate(total_ordered_quantity=Sum('orderproduct__quantity'))
+                              .exclude(total_ordered_quantity=None)
+                              .order_by('-total_ordered_quantity'))
+    
+    result = []
+    for product in total_products_ordered:
+        result.append(f"Quantity ordered of {product.name}: {product.total_ordered_quantity}")
+
+    return '\n'.join(result)
+
+
 # Run and print your queries
 # print(add_records_to_database())
-
 
 ##### Test Exercise 1 #####
 
@@ -72,3 +85,8 @@ def add_records_to_database():
 # print()
 # print('All Available Food Products:')
 # print(Product.objects.available_products_in_category("Food"))
+
+
+##### Test Exercise 2 #####
+
+# print(product_quantity_ordered())
