@@ -1,35 +1,30 @@
 from django.db import models
 
 
-# Create your models here.
-
-
 class RealEstateListing(models.Model):
-    PROPERTY_TYPE_CHOICES = [
-        ('House', 'House'),
-        ('Flat', 'Flat'),
-        ('Villa', 'Villa'),
-        ('Cottage', 'Cottage'),
-        ('Studio', 'Studio'),
-    ]
+    class PropertyTypeChoices(models.TextChoices):
+        HOUSE = 'House', 'House',
+        FLAT = 'Flat', 'Flat',
+        VILLA = 'Villa', 'Villa',
+        COTTAGE = 'Cottage', 'Cottage',
+        STUDIO = 'Studio', 'Studio',
 
-    property_type = models.CharField(max_length=100, choices=PROPERTY_TYPE_CHOICES)
+    property_type = models.CharField(max_length=100, choices=PropertyTypeChoices)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     bedrooms = models.PositiveIntegerField()
     location = models.CharField(max_length=100)
 
 
 class VideoGame(models.Model):
-    GENRE_CHOICES = [
-        ('Action', 'Action'),
-        ('RPG', 'RPG'),
-        ('Adventure', 'Adventure'),
-        ('Sports', 'Sports'),
-        ('Strategy', 'Strategy'),
-    ]
+    class GenreChoices(models.TextChoices):
+        ACTION = 'Action', 'Action',
+        RPG = 'RPG', 'RPG',
+        ADVENTURE = 'Adventure', 'Adventure',
+        SPORTS = 'Sports', 'Sports',
+        STRATEGY = 'Strategy', 'Strategy',
 
     title = models.CharField(max_length=100)
-    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
+    genre = models.CharField(max_length=100, choices=GenreChoices)
     release_year = models.PositiveIntegerField()
     rating = models.DecimalField(max_digits=2,decimal_places=1)
 
@@ -63,15 +58,14 @@ class Programmer(models.Model):
 
 
 class Task(models.Model):
-    PRIORITIES = (
-        ('Low', 'Low'),
-        ('Medium', 'Medium'),
-        ('High', 'High')
-    )
+    class PriorityChoices(models.TextChoices):
+        LOW = 'Low', 'Low',
+        MEDIUM = 'Medium', 'Medium',
+        HIGH = 'High', 'High'
 
     title = models.CharField(max_length=200)
     description = models.TextField()
-    priority = models.CharField(max_length=20, choices=PRIORITIES)
+    priority = models.CharField(max_length=20, choices=PriorityChoices)
     is_completed = models.BooleanField(default=False)
     creation_date = models.DateField()
     completion_date = models.DateField()
