@@ -1,5 +1,6 @@
 from django.db import models
-from main_app.managers import RealEstateListingManager
+from django.core.validators import MinValueValidator, MaxValueValidator
+from main_app.managers import RealEstateListingManager, VideoGameManager
 
 
 class RealEstateListing(models.Model):
@@ -28,8 +29,22 @@ class VideoGame(models.Model):
 
     title = models.CharField(max_length=100)
     genre = models.CharField(max_length=100, choices=GenreChoices)
-    release_year = models.PositiveIntegerField()
-    rating = models.DecimalField(max_digits=2,decimal_places=1)
+    release_year = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1990, message="The release year must be between 1990 and 2023"),
+            MaxValueValidator(2023, message="The release year must be between 1990 and 2023"),
+        ]
+    )
+    rating = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        validators=[
+            MinValueValidator(0.0, message="The rating must be between 0.0 and 10.0"),
+            MaxValueValidator(10.0, message="The rating must be between 0.0 and 10.0"),
+        ]
+    )
+
+    objects = VideoGameManager()
 
     def __str__(self):
         return self.title
