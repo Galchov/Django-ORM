@@ -6,7 +6,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 
-from main_app.models import RealEstateListing, VideoGame, BillingInfo, Invoice, Technology, Project, Programmer
+from datetime import date
+from main_app.models import RealEstateListing, VideoGame, BillingInfo, Invoice, Technology, Project, Programmer, Task
 
 
 ##### Test Exercise 1 #####
@@ -38,17 +39,6 @@ from main_app.models import RealEstateListing, VideoGame, BillingInfo, Invoice, 
 
 ##### Test Exercise 2 #####
 
-# # Create instances of VideoGame with real data
-# game1 = VideoGame.objects.create(title="The Last of Us Part II", genre="Action", release_year=2020, rating=9.0)
-
-# game2 = VideoGame.objects.create(title="Cyberpunk 2077", genre="RPG", release_year=2020, rating=7.2)
-
-# game3 = VideoGame.objects.create(title="Red Dead Redemption 2", genre="Adventure", release_year=2018, rating=9.7)
-
-# game4 = VideoGame.objects.create(title="FIFA 22", genre="Sports", release_year=2021, rating=8.5)
-
-# game5 = VideoGame.objects.create(title="Civilization VI", genre="Strategy", release_year=2016, rating=8.8)
-
 # Run the custom manager methods
 # action_games = VideoGame.objects.games_by_genre('Action')
 # recent_games = VideoGame.objects.recently_released_games(2019)
@@ -65,19 +55,6 @@ from main_app.models import RealEstateListing, VideoGame, BillingInfo, Invoice, 
 
 
 ##### Test Exercise 3 #####
-
-# # Create BillingInfo instances with real addresses
-# billing_info_1 = BillingInfo.objects.create(address="456 Oak Lane, Boston, MA 02108")
-
-# billing_info_2 = BillingInfo.objects.create(address="789 Maple Avenue, San Francisco, CA 94101")
-
-# billing_info_3 = BillingInfo.objects.create(address="101 Pine Street, New York, NY 10001")
-
-# # Create Invoice instances with related BillingInfo
-# invoice_1 = Invoice.objects.create(invoice_number="INV007", billing_info=billing_info_1)
-
-# invoice_2 = Invoice.objects.create(invoice_number="INV002", billing_info=billing_info_2)
-# invoice_3 = Invoice.objects.create(invoice_number="INV004", billing_info=billing_info_3)
 
 # # Get invoices starting with a specific prefix
 # invoices_with_prefix = Invoice.get_invoices_with_prefix("INV")
@@ -99,27 +76,6 @@ from main_app.models import RealEstateListing, VideoGame, BillingInfo, Invoice, 
 
 ##### Test Exercise 4 #####
 
-# # Create instances of Technology
-# tech1 = Technology.objects.create(name="Python", description="A high-level programming language")
-
-# tech2 = Technology.objects.create(name="JavaScript", description="A scripting language for the web")
-
-# tech3 = Technology.objects.create(name="SQL", description="Structured Query Language")
-
-# # Create instances of Project
-# project1 = Project.objects.create(name="Web App Project", description="Developing a web application")
-
-# project1.technologies_used.add(tech1, tech2)
-
-# project2 = Project.objects.create(name="Database Project", description="Managing databases")
-
-# project2.technologies_used.add(tech3)
-# # Create instances of Programmer
-# programmer1 = Programmer.objects.create(name="Alice")
-# programmer2 = Programmer.objects.create(name="Bob")
-# # Associate projects with programmers
-# programmer1.projects.add(project1, project2)
-# programmer2.projects.add(project1)
 # # Execute the "get_programmers_with_technologies" method for a specific project
 # specific_project = Project.objects.get(name="Web App Project")
 # programmers_with_technologies = specific_project.get_programmers_with_technologies()
@@ -139,3 +95,30 @@ from main_app.models import RealEstateListing, VideoGame, BillingInfo, Invoice, 
 #     print(f"Project: {project.name} for {specific_programmer.name}")
 #     for technology in project.technologies_used.all():
 #         print(f"- Technology: {technology.name}")
+
+
+##### Test Exercise 5 #####
+
+# # 1. Get ongoing high-priority tasks
+# ongoing_high_priority = Task.ongoing_high_priority_tasks()
+# print("Ongoing High Priority Tasks:")
+# for task in ongoing_high_priority:
+#     print('- ' + task.title)
+
+# # 2. Get completed medium-priority tasks
+# completed_mid_priority = Task.completed_mid_priority_tasks()
+# print("Completed Medium Priority Tasks:")
+# for task in completed_mid_priority:
+#     print('- ' + task.title)
+
+# # 3. Search for tasks based on a query
+# search_results = Task.search_tasks("Task 3")
+# print("Search Results:")
+# for task in search_results:
+#     print('- ' + task.title)
+
+# # 4. Get recent completed tasks
+# recent_completed = task1.recent_completed_tasks(days=5)
+# print("Recent Completed Tasks:")
+# for task in recent_completed:
+#     print('- ' + task.title)
